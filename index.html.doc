@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mobile Legends Donat</title>
+  <meta charset="UTF-8">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <h2>💎 Mobile Legends Diamond Buyurtma</h2>
+
+  <label>Diamond paketini tanlang:</label><br>
+  <select id="package">
+    <option value="11">11 diamond</option>
+    <option value="55">55 diamond</option>
+    <option value="77">77 diamond</option>
+    <option value="100">100 diamond</option>
+  </select><br><br>
+
+  <label>O‘yinchi ID:</label><br>
+  <input type="text" id="player_id" placeholder="123456789"><br><br>
+
+  <label>Server ID:</label><br>
+  <input type="text" id="server_id" placeholder="1234"><br><br>
+
+  <button onclick="submitOrder()">Sotib olish</button>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    const user_id = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : null;
+
+    function submitOrder() {
+      const pkg = document.getElementById("package").value;
+      const playerId = document.getElementById("player_id").value.trim();
+      const serverId = document.getElementById("server_id").value.trim();
+
+      if (!playerId || !serverId) {
+        alert("Iltimos, ID va Server ID kiriting.");
+        return;
+      }
+
+      fetch("https://YOUR-BACKEND-URL/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id,
+          player_id: playerId,
+          server_id: serverId,
+          package: pkg
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message || "Buyurtma qabul qilindi!");
+      })
+      .catch(() => alert("Xatolik yuz berdi."));
+    }
+  </script>
+</body>
+</html>
