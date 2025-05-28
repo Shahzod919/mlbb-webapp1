@@ -26,7 +26,6 @@
 
   <script>
     const tg = window.Telegram.WebApp;
-    const user_id = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : null;
 
     function submitOrder() {
       const pkg = document.getElementById("package").value;
@@ -38,21 +37,15 @@
         return;
       }
 
-      fetch("https://YOUR-BACKEND-URL/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id,
-          player_id: playerId,
-          server_id: serverId,
-          package: pkg
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
-        alert(data.message || "Buyurtma qabul qilindi!");
-      })
-      .catch(() => alert("Xatolik yuz berdi."));
+      const data = {
+        player_id: playerId,
+        server_id: serverId,
+        package: pkg
+      };
+
+      // Telegram botga ma’lumotni yuboramiz
+      tg.sendData(JSON.stringify(data));
+      tg.close(); // Web App’ni yopish (ixtiyoriy)
     }
   </script>
 </body>
